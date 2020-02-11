@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Report</title>
+    <style type="text/css">
+        html, body { margin: 0; padding: 16px; }
+    </style>
+    <script type="text/javascript" src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+<div id="plot1"></div>
+<div id="plot2"></div>
+<script type="text/javascript">
+    const outputPrefix = decodeURIComponent(location.search.match(/[?&]f=([^.&]+)/)[1]);
+    fetch(outputPrefix + '.delay.json?r=' + Math.random()).then(_ => _.json()).then(data => {
+        Plotly.newPlot('plot1', [{
+            x: data.map(_ => _.time),
+            y: data.map(_ => _.delay),
+            mode: 'markers',
+            type: 'scatter'
+        }], { title:'Delay vs. time', yaxis: { exponentformat: 'none', rangemode: 'tozero' } });
+    });
+    fetch(outputPrefix + '.cdf.json?r=' + Math.random()).then(_ => _.json()).then(data => {
+        Plotly.newPlot('plot2', [{
+            x: data.map(_ => _.delay),
+            y: data.map(_ => _.percentile),
+            mode: 'lines',
+            type: 'scatter'
+        }], { title:'Delay CDF', yaxis: { exponentformat: 'none', rangemode: 'tozero' } });
+    });
+</script>
+</body>
+</html>
